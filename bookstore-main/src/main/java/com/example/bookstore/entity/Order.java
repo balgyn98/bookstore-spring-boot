@@ -1,19 +1,20 @@
-package com.example.entity;
+package com.example.bookstore.entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.example.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "orders")
-public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
 
+@Getter
+@Setter
+public class Order extends BaseEntity<Integer> {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id")
     private Customer customer;
@@ -49,66 +50,10 @@ public class Order {
         this.status = status;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
-
-    public Date getOpeningTimestamp() {
-        return openingTimestamp;
-    }
-
-    public void setOpeningTimestamp(Date openingTimestamp) {
-        this.openingTimestamp = openingTimestamp;
-    }
-
-    public Date getClosingTimestamp() {
-        return closingTimestamp;
-    }
-
-    public void setClosingTimestamp(Date closingTimestamp) {
-        this.closingTimestamp = closingTimestamp;
-    }
-
-    public int getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(int totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     @Override
     public String toString() {
         return "Order{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", customer=" + customer +
                 ", books=" + books +
                 ", openingTimestamp=" + openingTimestamp +

@@ -1,32 +1,37 @@
 package com.example.bookstore.controller;
 
-import com.example.entity.Customer;
-import com.example.entity.Order;
-import com.example.repository.CustomerDAO;
+import com.example.bookstore.entity.Customer;
+import com.example.bookstore.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
 public class CustomerController {
+    private final CustomerRepository customerRepository;
 
     @Autowired
-    CustomerDAO customerDAO;
+    public CustomerController(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
+    }
 
     @PostMapping("/login")
     public Customer login(@RequestBody String email) {
-        return customerDAO.findFirstByEmailLike(email);
+        String sanitized = email.replaceAll("^\"|\"$", "");
+        return customerRepository.findFirstByEmailLike(sanitized)
+                .orElseThrow(() -> new RuntimeException("Customer not found with email: " + email));
     }
 
     @PostMapping("/register")
     public Customer register(@RequestBody RegisterRequest registerRequest) {
-        return customerDAO.save(new Customer(
+        return customerRepository.save(new Customer(
                 registerRequest.getName(),
                 registerRequest.getEmail(),
-                registerRequest.getPassword(),
-                10000
+                registerRequest.getPassword()
         ));
     }
 

@@ -1,9 +1,8 @@
 package com.example.bookstore.controller;
 
 import com.example.bookstore.services.OrderService;
-import com.example.entity.Book;
-import com.example.entity.Customer;
-import com.example.repository.CustomerDAO;
+import com.example.bookstore.entity.Book;
+import com.example.bookstore.entity.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +30,7 @@ public class OrderControllerTest {
 
     @BeforeEach
     public void setup() {
-        customer = new Customer("user1", "user1", "user1", 1976);
+        customer = new Customer("user1", "user1", "user1");
 
         Date date = new Date();
         book = new Book("book1", "author1", date, 1000);

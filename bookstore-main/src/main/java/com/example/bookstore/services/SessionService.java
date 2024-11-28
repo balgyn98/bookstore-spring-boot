@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Service
 public class SessionService {
-    int maxSessionDuration = 2; //session should be no longer than 2 minutes
+    static final int maxSessionDuration = 2; //session should be no longer than 2 minutes
 
     public boolean isSessionLessThanTwoMinutes(Date orderStartTime) {
         Instant startInstant = orderStartTime.toInstant();
