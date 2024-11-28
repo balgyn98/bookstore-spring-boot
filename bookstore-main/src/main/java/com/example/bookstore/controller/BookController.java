@@ -2,6 +2,7 @@ package com.example.bookstore.controller;
 
 import com.example.bookstore.entity.Book;
 import com.example.bookstore.repository.BookRepository;
+import com.example.bookstore.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,10 +15,12 @@ import java.util.List;
 @RequestMapping("/library")
 public class BookController {
 
+    private final CustomerService customerService;
     private final BookRepository bookRepository;
 
     @Autowired
-    public BookController(BookRepository bookRepository) {
+    public BookController(CustomerService customerService, BookRepository bookRepository) {
+        this.customerService = customerService;
         this.bookRepository = bookRepository;
     }
 
@@ -26,9 +29,8 @@ public class BookController {
         return bookRepository.findAll();
     }
 
-    @GetMapping("/book-by-id/{bookId}")
+    @GetMapping("/book/{bookId}")
     public Book findBookById(@PathVariable("bookId") int bookId){
-        return bookRepository.findById(bookId)
-                .orElseThrow(() -> new RuntimeException("Book not found with bookId: " + bookId));
+        return customerService.findBookById(bookId);
     }
 }

@@ -22,7 +22,7 @@ public class OrderController {
         return orderService.getOrdersList();
     }
 
-    @PostMapping("/save-order")
+    @PostMapping("/orders")
     public boolean saveOrder(@RequestBody OrderRequest orderRequest) {
         return orderService.saveOrder(
                 orderRequest.getUserBooksList(),
