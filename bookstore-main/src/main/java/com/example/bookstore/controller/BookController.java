@@ -2,6 +2,7 @@ package com.example.bookstore.controller;
 
 import com.example.bookstore.entity.Book;
 import com.example.bookstore.repository.BookRepository;
+import com.example.bookstore.services.BookService;
 import com.example.bookstore.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +16,12 @@ import java.util.List;
 @RequestMapping("/library")
 public class BookController {
 
-    private final CustomerService customerService;
+    private final BookService bookService;
     private final BookRepository bookRepository;
 
     @Autowired
-    public BookController(CustomerService customerService, BookRepository bookRepository) {
-        this.customerService = customerService;
+    public BookController(BookService bookService, BookRepository bookRepository) {
+        this.bookService = bookService;
         this.bookRepository = bookRepository;
     }
 
@@ -31,6 +32,6 @@ public class BookController {
 
     @GetMapping("/book/{bookId}")
     public Book findBookById(@PathVariable("bookId") int bookId){
-        return customerService.findBookById(bookId);
+        return bookService.findBookById(bookId);
     }
 }
