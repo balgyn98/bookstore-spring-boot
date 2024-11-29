@@ -15,19 +15,15 @@ import java.util.List;
 @RestController
 @RequestMapping("/library")
 public class BookController {
-
     private final BookService bookService;
-    private final BookRepository bookRepository;
-
     @Autowired
-    public BookController(BookService bookService, BookRepository bookRepository) {
+    public BookController(BookService bookService) {
         this.bookService = bookService;
-        this.bookRepository = bookRepository;
     }
 
     @GetMapping("/books")
     public List<Book> findAllBooks(){
-        return bookRepository.findAll();
+        return bookService.findAllBooks();
     }
 
     @GetMapping("/{bookId}")

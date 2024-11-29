@@ -9,12 +9,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 public class CustomerController {
-    private final CustomerRepository customerRepository;
     private final CustomerService customerService;
 
     @Autowired
-    public CustomerController(CustomerRepository customerRepository, CustomerService customerService) {
-        this.customerRepository = customerRepository;
+    public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
@@ -25,11 +23,6 @@ public class CustomerController {
 
     @PostMapping("/register")
     public Customer register(@RequestBody RegisterRequest registerRequest) {
-        return customerRepository.save(new Customer(
-                registerRequest.getName(),
-                registerRequest.getEmail(),
-                registerRequest.getPassword()
-        ));
+        return customerService.register(registerRequest);
     }
-
 }

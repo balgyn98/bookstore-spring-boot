@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/orders")
 public class OrderController {
-
     private final OrderService orderService;
 
     @Autowired
@@ -17,12 +17,12 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/orders")
+    @GetMapping
     public List<Order> orders() {
         return orderService.getOrdersList();
     }
 
-    @PostMapping("/orders")
+    @PostMapping
     public boolean saveOrder(@RequestBody OrderRequest orderRequest) {
         return orderService.saveOrder(
                 orderRequest.getUserBooksList(),
