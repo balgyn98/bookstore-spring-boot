@@ -27,7 +27,7 @@ jobs:
       - name: build and push docker image
         uses: mr-smithers-excellent/docker-build-push@v5
         with:
-          image: balgyn98/bookstore
+          image: 1998bal/bookstore
           tags: v1
           registry: docker.io
           dockerfile: Dockerfile
