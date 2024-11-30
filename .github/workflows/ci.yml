@@ -44,8 +44,7 @@ jobs:
       - name: Check Docker status
         run: sudo systemctl status docker
 
-      # Run tests using Testcontainers
-      - name: Run Tests
-        run: mvn test
-        env:
-          DOCKER_HOST: tcp://docker:2375
+      - name: Setup Testcontainers Cloud Client
+        uses: atomicjar/testcontainers-cloud-setup-action@v1
+        with:
+          token: ${{ secrets.TC_CLOUD_TOKEN }}
