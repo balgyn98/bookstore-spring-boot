@@ -3,62 +3,95 @@ package com.example.bookstore.controller;
 import com.example.bookstore.entity.Book;
 import com.example.bookstore.repository.BookRepository;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
+import org.springframework.core.ParameterizedTypeReference;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Testcontainers
 public class BookControllerTest {
 
-    @Mock
-    BookRepository bookRepository;
+    @Container
+    @ServiceConnection
+    static PostgreSQLContainer<?> postgresContainer =
+            new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"));
 
-    @InjectMocks
-    BookController bookController;
+    @BeforeAll
+    static void beforeAll() {
+        postgresContainer.start();
+    }
 
-    Book book;
+    @AfterAll
+    static void afterAll() {
+        postgresContainer.stop();
+    }
+
+    BookRepository repository;
+    TestRestTemplate restTemplate;
+
+    @Autowired
+    public BookControllerTest(BookRepository repository, TestRestTemplate restTemplate) {
+        this.repository = repository;
+        this.restTemplate = restTemplate;
+    }
+
+    @LocalServerPort
+    private Integer port;
+
 
     @BeforeEach
-    public void setup() {
-        Date date = new Date();
-        book = new Book("book1", "author1", date, 1000);
+    void setUp() {
+        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory("http://localhost:" + port));
+
+        Book book1 = new Book("book1", "author1", new Date(), 1234);
+        Book book2 = new Book("book2", "author2", new Date(), 1296);
+
+        List<Book> books = Arrays.asList(book1, book2);
+
+        repository.saveAll(books);
     }
 
     @Test
-    public void findAllBooks() {
-        List<Book> books = new ArrayList<>();
-        books.add(book);
+    void shouldFindAllBooks() {
 
-        Mockito.when(bookRepository.findAll()).thenReturn(books);
+        ResponseEntity<List<Book>> response = restTemplate.exchange(
+                "/library/books", HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Book>>() {
+                });
+        List<Book> books = response.getBody();
+        assertEquals(2, books.size());
+        assertEquals("author1", books.get(0).getAuthor());
 
-        List<Book> result = bookController.findAllBooks();
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals("book1", result.get(0).getName());
-        assertEquals("author1", result.get(0).getAuthor());
     }
 
     @Test
-    public void findBookById(){
+    void shouldGetBooksById() {
+        int bookId = 1;
+        String url = String.format("http://localhost:%d/library/%d", port, bookId);
 
-        Mockito.when(bookRepository.findById(1)).thenReturn(Optional.ofNullable(book));
+        ResponseEntity<Book> response = restTemplate.exchange(
+                url, HttpMethod.GET, null, Book.class);
 
-        Book result = bookController.findBookById(1);
+        Book book = response.getBody();
 
-        assertNotNull(result);
-        assertEquals("book1", result.getName());
-        assertEquals("author1", result.getAuthor());
+        assertNotNull(book);
+        assertEquals(bookId, book.getId());
+        assertEquals("author1", book.getAuthor());
+        assertEquals(1234, book.getPrice());
+
     }
-
 }
