@@ -14,7 +14,7 @@ jobs:
 
     services:
       docker:
-        image: docker:19.03.12
+        image: docker:latest
         options: --privileged
         ports:
           - 5432:5432
@@ -34,3 +34,11 @@ jobs:
       # Build all projects using the parent POM
       - name: Build All Modules
         run: mvn clean install
+
+      # Set up Docker (Check Docker version and status)
+      - name: Set up Docker
+        run: docker --version
+
+      # Ensure Docker service is running
+      - name: Check Docker status
+        run: sudo systemctl status docker
