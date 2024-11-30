@@ -13,9 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      - docker:dind
-    variables:
-      DOCKER_HOST: tcp://docker:2375
+      docker:
+        image: docker:19.03.12-dind
+        options: --privileged
+
 
     steps:
       # Checkout the repository
