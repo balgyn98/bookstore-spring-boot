@@ -1,4 +1,4 @@
-name: Build and Test All Maven Projects
+name: Build All Maven Projects
 
 on:
   push:
@@ -9,30 +9,21 @@ on:
       - main
 
 jobs:
-  build-projects:
+  build:
     runs-on: ubuntu-latest
 
-    # Matrix strategy to handle multiple projects
-    strategy:
-      matrix:
-        project:
-          - bookstore-main
-          - in-memory-db-starter
-          - spring-data-jpa
-
     steps:
-      # Step 1: Checkout the repository
+      # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up JDK (adjust version if needed)
+      # Set up JDK
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '21' # Adjust the version based on your project's requirements
+          java-version: '21'
           distribution: 'temurin'
 
-      # Step 3: Navigate to the correct project directory and run Maven commands
-      - name: Build and Test
-        working-directory: ${{ matrix.project }} # Change directory dynamically based on the project
+      # Build all projects using the parent POM
+      - name: Build All Modules
         run: mvn clean install
