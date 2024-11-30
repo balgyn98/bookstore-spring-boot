@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    ports:
+      - 5432:5432
+    image: postgres
+    container_name: postgres_container
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=bookstore
+    restart: always
+
+  app:
+    ports:
+      - 8080:8080
+    image: '1998bal/bookstore:v1'
+    build:
+      context: .
+    container_name: bookstore
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/bookstore
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    restart: always
