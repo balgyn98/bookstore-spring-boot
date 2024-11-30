@@ -1,53 +1,40 @@
-name: Build All Maven Projects
+name: Java CI with Testcontainers
 
 on:
   push:
     branches:
       - main
-      - homework-7
   pull_request:
-    branches:
-      - main
-      - homework-7
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
-    env:
-      POETRY_VIRTUALENVS_CREATE: false
-      TESTCONTAINER_DOCKER_NETWORK: tomodachi-testcontainers
-      DOCKER_BUILDKIT: 1
-
     steps:
-      # Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # Step 1: Check out the repository
+      - name: Check out code
+        uses: actions/checkout@v3
 
-      # Set up JDK
+      # Step 2: Set up JDK (e.g., Java 21)
       - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '21'
-          distribution: 'temurin'
+          distribution: temurin
+          java-version: 21
 
-      # Build all projects using the parent POM
-      - name: Build All Modules
-        run: mvn clean install
-
-      # Set up Docker (Check Docker version and status)
+      # Step 3: Set up Docker (required for Testcontainers)
       - name: Set up Docker
-        run: docker --version
+        uses: docker/setup-buildx-action@v2
 
-      # Ensure Docker service is running
-      - name: Check Docker status
-        run: sudo systemctl status docker
-
-      - name: Create Docker network for running Testcontianers
-        run: docker network create ${{ env.TESTCONTAINER_DOCKER_NETWORK }}
-
-      - name: Build Docker image - Release
-        uses: docker/build-push-action@v5
+      # Step 4: Cache Maven dependencies (optional, for faster builds)
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
         with:
-          target: release
-          load: true
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      # Step 5: Run tests
+      - name: Run Maven tests
+        run: mvn clean test
