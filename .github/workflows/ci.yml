@@ -13,13 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgres:
-        image: postgres:latest
+      docker:
+        image: docker:19.03.12
+        options: --privileged
         ports:
           - 5432:5432
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
 
     steps:
       # Checkout the repository
