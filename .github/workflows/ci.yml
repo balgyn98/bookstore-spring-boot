@@ -23,5 +23,6 @@ jobs:
         with:
           token: ${{ secrets.BOOKSTORE }}
 
-      - name: Build with Maven
-        run: ./mvnw verify
+      # Step 5: Run tests
+      - name: Run Maven tests
+        run: mvn clean test
