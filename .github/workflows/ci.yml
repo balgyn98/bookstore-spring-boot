@@ -22,9 +22,11 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      # Step 3: Set up Docker (required for Testcontainers)
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
+      - name: Cache Docker images
+        uses: actions/cache@v3
+        with:
+          path: /tmp/testcontainers
+          key: ${{ runner.os }}-docker-${{ hashFiles('**/pom.xml') }}
 
       # Step 4: Cache Maven dependencies (optional, for faster builds)
       - name: Cache Maven dependencies
