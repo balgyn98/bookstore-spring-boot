@@ -1,54 +1,38 @@
-# .github/workflows/ci.yml
-name: Java CI with Maven
+name: Build and Test All Maven Projects
 
 on:
   push:
     branches:
       - main
-
   pull_request:
     branches:
       - main
+
 jobs:
-  build:
+  build-projects:
     runs-on: ubuntu-latest
 
+    # Matrix strategy to handle multiple projects
     strategy:
       matrix:
         project:
           - bookstore-main
           - in-memory-db-starter
           - spring-data-jpa
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
 
-      - name: Set up JDK 21
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up JDK (adjust version if needed)
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '21'
+          java-version: '17' # Adjust the version based on your project's requirements
           distribution: 'temurin'
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Build with Maven
-        run: mvn -B clean install
-
-      - name: Run Tests
-        run: mvn test
-
-
-      - name: Build and Package with Maven
-        run: mvn -B clean package
-
-      - name: Archive the JAR Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: bookstore
-          path: target/*.jar
+      # Step 3: Navigate to the correct project directory and run Maven commands
+      - name: Build and Test
+        working-directory: ${{ matrix.project }} # Change directory dynamically based on the project
+        run: mvn clean install
