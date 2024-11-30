@@ -8,6 +8,22 @@ jobs:
   build:
     name: Maven Build
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:lates
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: bookstore
+        options: >-
+          --health-cmd="pg_isready -U your_username"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       - uses: actions/checkout@v3
 
@@ -19,7 +35,7 @@ jobs:
           cache: 'maven'
 
       - name: Setup Testcontainers Cloud Client
-        uses: atomicjar/testcontainers-cloud-setup-action@main
+        uses: atomicjar/testcontainers-cloud-setup-action@v1
         with:
           token: ${{ secrets.BOOKSTORE }}
 
