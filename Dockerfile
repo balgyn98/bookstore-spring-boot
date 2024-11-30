@@ -1,5 +1,14 @@
-FROM eclipse-temurin
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
+# Base image with Java runtime
+FROM eclipse-temurin:21-jdk-jammy
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the packaged JAR file from the main module
+COPY bookstore-main/target/bookstore-*.jar app.jar
+
+# Expose the application port (e.g., 8080)
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
