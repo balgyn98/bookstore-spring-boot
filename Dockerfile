@@ -1,9 +1,5 @@
-FROM openjdk:21-jre-slim
-
-WORKDIR /app
-
-COPY target/classes.jar app.jar
-
+FROM eclipse-temurin
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
 EXPOSE 8080
-
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]

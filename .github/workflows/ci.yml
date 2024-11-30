@@ -42,3 +42,14 @@ jobs:
       # Step 5: Run tests
       - name: Run Maven tests
         run: mvn clean test
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml -DskipTests
+
+      # https://medium.com/@alexander.volminger/ci-cd-for-java-maven-using-github-actions-d009a7cb4b8f
+      - name: Upload jar
+        run: mkdir staging && cp target/sumpdata-*.jar staging
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Package
+          path: staging
