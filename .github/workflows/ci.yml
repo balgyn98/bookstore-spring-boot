@@ -43,13 +43,14 @@ jobs:
       - name: Run Maven tests
         run: mvn clean test
 
+      # Build the project with Maven (this will create the JAR file)
       - name: Build with Maven
-        run: mvn -B package --file pom.xml -DskipTests
+        run: mvn clean package
 
-      # https://medium.com/@alexander.volminger/ci-cd-for-java-maven-using-github-actions-d009a7cb4b8f
-      - name: Upload jar
-        run: mkdir staging && cp target/sumpdata-*.jar staging
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Package
-          path: staging
+      # List the target directory to confirm the JAR file is generated
+      - name: List target directory
+        run: ls -la target
+
+      # Copy the JAR to staging or another directory
+      - name: Create staging directory and copy JAR
+        run: mkdir staging && cp target/bookstore-*.jar staging
