@@ -13,11 +13,9 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      docker:
-        image: docker:latest
-        options: --privileged
-        ports:
-          - 5432:5432
+      - docker:dind
+    variables:
+      DOCKER_HOST: tcp://docker:2375
 
     steps:
       # Checkout the repository
