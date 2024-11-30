@@ -13,6 +13,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      # Docker-in-Docker (dind) service for Testcontainers
+      docker:
+        image: docker:19.03.12-dind
+        options: --privileged
+
     steps:
       # Checkout the repository
       - name: Checkout repository
@@ -36,3 +43,9 @@ jobs:
       # Ensure Docker service is running
       - name: Check Docker status
         run: sudo systemctl status docker
+
+      # Run tests using Testcontainers
+      - name: Run Tests
+        run: mvn test
+        env:
+          DOCKER_HOST: tcp://docker:2375
