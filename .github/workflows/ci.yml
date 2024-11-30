@@ -4,20 +4,15 @@ on:
   push:
     branches:
       - main
+      - homework-7
   pull_request:
     branches:
       - main
+      - homework-7
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    services:
-      docker:
-        image: docker:19.03.12-dind
-        options: --privileged
-
-
     steps:
       # Checkout the repository
       - name: Checkout repository
