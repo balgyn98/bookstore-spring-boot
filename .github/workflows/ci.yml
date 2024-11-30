@@ -15,9 +15,9 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: bookstore
+          POSTGRES_USER: ${{ secrets.DATASOURCE_USERNAME }}
+          POSTGRES_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         options: >-
           --health-cmd="pg_isready -U your_username"
           --health-interval=10s
@@ -39,6 +39,5 @@ jobs:
         with:
           token: ${{ secrets.BOOKSTORE }}
 
-      # Step 5: Run tests
       - name: Run Maven tests
         run: mvn clean test
