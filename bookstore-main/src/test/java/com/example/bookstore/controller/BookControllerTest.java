@@ -1,5 +1,6 @@
 package com.example.bookstore.controller;
 
+import com.example.bookstore.config.TestcontainersConfig;
 import com.example.bookstore.entity.Book;
 import com.example.bookstore.repository.BookRepository;
 import org.junit.jupiter.api.*;
@@ -23,25 +24,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-public class BookControllerTest {
-
-    @Container
-    @ServiceConnection
-    static PostgreSQLContainer<?> postgresContainer =
-            new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"));
-
-    @BeforeAll
-    static void beforeAll() {
-        postgresContainer.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        postgresContainer.stop();
-    }
-
-    BookRepository repository;
-    TestRestTemplate restTemplate;
+public class BookControllerTest extends TestcontainersConfig {
+    private BookRepository repository;
+    private TestRestTemplate restTemplate;
 
     @Autowired
     public BookControllerTest(BookRepository repository, TestRestTemplate restTemplate) {

@@ -1,5 +1,6 @@
 package com.example.bookstore.controller;
 
+import com.example.bookstore.config.TestcontainersConfig;
 import com.example.bookstore.entity.Order;
 import com.example.bookstore.entity.Status;
 import com.example.bookstore.repository.BookRepository;
@@ -36,26 +37,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-public class OrderControllerTest {
-    @Container
-    @ServiceConnection
-    static PostgreSQLContainer<?> postgresContainer =
-            new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"));
-
-    @BeforeAll
-    static void beforeAll() {
-        postgresContainer.start();
-    }
-
-    @AfterAll
-    static void afterAll() {
-        postgresContainer.stop();
-    }
-
-    OrderRepository repository;
-    BookRepository bookRepository;
-    CustomerRepository customerRepository;
-    TestRestTemplate restTemplate;
+public class OrderControllerTest extends TestcontainersConfig {
+    private OrderRepository repository;
+    private BookRepository bookRepository;
+    private CustomerRepository customerRepository;
+    private TestRestTemplate restTemplate;
     @Autowired
     public OrderControllerTest(OrderRepository repository, BookRepository bookRepository, CustomerRepository customerRepository,  TestRestTemplate restTemplate) {
         this.repository = repository;
