@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.4.0</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <!-- Group ID for the parent project -->
+    <groupId>com.example</groupId>
+    <artifactId>spring-boot-bookstore</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging> <!-- This must be 'pom' for a parent POM -->
+
+    <name>Spring Boot Bookstore</name>
+
+    <!-- Define submodules -->
+    <modules>
+        <module>bookstore-main</module>
+        <module>in-memory-db-starter</module>
+        <module>spring-data-jpa</module>
+    </modules>
+</project>

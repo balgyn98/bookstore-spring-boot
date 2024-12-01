@@ -1,0 +1,35 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build with maven
+        run: mvn clean install -DskipTests
+
+      - name: build and push docker image
+        uses: mr-smithers-excellent/docker-build-push@v5
+        with:
+          image: 1998bal/bookstore
+          tags: v1
+          registry: docker.io
+          dockerfile: Dockerfile
+          username: 1998bal
+          password: fiBxix-fuwrok-zyjju4

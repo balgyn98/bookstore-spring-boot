@@ -1,0 +1,48 @@
+# .github/workflows/ci.yml
+name: Java CI with Maven
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build with Maven
+        run: mvn -B clean install
+
+      - name: Run Tests
+        run: mvn test
+
+
+      - name: Build and Package with Maven
+        run: mvn -B clean package
+
+      - name: Archive the JAR Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: bookstore
+          path: target/*.jar

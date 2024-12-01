@@ -18,6 +18,7 @@ public class CustomerController {
 
     @PostMapping("/login")
     public Customer login(@RequestBody String email) {
+
         return customerService.findUserByEmail(email);
     }
 
