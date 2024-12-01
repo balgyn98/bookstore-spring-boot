@@ -8,23 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
-import org.testcontainers.utility.DockerImageName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-public class CustomerControllerTest extends TestcontainersConfig {
+@DirtiesContext(classMode = AFTER_CLASS)
+public class CustomerControllerTest extends TestcontainersConfig{
     private CustomerRepository repository;
     private TestRestTemplate restTemplate;
 
@@ -33,11 +30,9 @@ public class CustomerControllerTest extends TestcontainersConfig {
         this.repository = repository;
         this.restTemplate = restTemplate;
     }
-
+//
     @LocalServerPort
     private Integer port;
-
-
 
     @BeforeEach
     void setUp() {

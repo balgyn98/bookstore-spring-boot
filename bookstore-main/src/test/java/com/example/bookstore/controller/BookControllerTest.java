@@ -8,23 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-public class BookControllerTest extends TestcontainersConfig {
+@DirtiesContext(classMode = AFTER_CLASS)
+public class BookControllerTest extends TestcontainersConfig{
     private BookRepository repository;
     private TestRestTemplate restTemplate;
 
@@ -36,7 +35,6 @@ public class BookControllerTest extends TestcontainersConfig {
 
     @LocalServerPort
     private Integer port;
-
 
     @BeforeEach
     void setUp() {

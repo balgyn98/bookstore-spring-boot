@@ -6,37 +6,29 @@ import com.example.bookstore.entity.Status;
 import com.example.bookstore.repository.BookRepository;
 import com.example.bookstore.repository.CustomerRepository;
 import com.example.bookstore.repository.OrderRepository;
-import com.example.bookstore.services.OrderService;
 import com.example.bookstore.entity.Book;
 import com.example.bookstore.entity.Customer;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mvel2.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
+@DirtiesContext(classMode = AFTER_CLASS)
 public class OrderControllerTest extends TestcontainersConfig {
     private OrderRepository repository;
     private BookRepository bookRepository;
@@ -52,8 +44,6 @@ public class OrderControllerTest extends TestcontainersConfig {
 
     @LocalServerPort
     private Integer port;
-
-
 
     @BeforeEach
     void setUp() {
